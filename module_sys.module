@@ -1,0 +1,42 @@
+<?php
+
+function module_sys_init(){
+	$get = system_get_info('module', 'metatag');
+	myprint($get);
+}
+
+function module_enable_list(){
+  $listeModule = array();
+  $file = new SPLFileObject(drupal_get_path('module','module_enable').'/listemodule.txt');
+  try{
+    foreach($file as $line) {
+      $listeModule[] = htmlspecialchars($line);
+    }
+  }catch(Exception $e){}
+  return $listeModule;
+}
+
+/**
+ * Implement of hook_menu().
+ */
+function module_sys_menu() {
+  $items = array();
+
+  $items['admin/config/module_sys'] = array(
+    'title' => 'Module Sys Configuration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('module_sys_admin_form'),
+    'file' => 'module_sys.admin.inc',
+    'access arguments' => array('access content'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  
+  return $items;
+}
+
+
+function myprint($var){
+	print '<pre>';
+	print_r($var);
+	die();
+}

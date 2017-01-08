@@ -1,0 +1,9 @@
+name = Module system	
+description = "Define function for External Module"
+package = K&B Development
+core = 7.x
+configure = admin/config/module_sys/settings
+
+files[] = includes/module_syst.admin.inc
+files[] = includes/module_syst.functions.inc
+dependencies[] = ctools
