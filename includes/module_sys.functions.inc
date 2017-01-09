@@ -4,11 +4,47 @@ define('MODULE_CONTRIB_DIRECTORY', variable_get('module_contrib_directory','site
 
 /**
  *
+ * Function to get info of internal module which is not enable
+ * @param string $modulename
+*/
+
+function getModulenotEnableInfo($modulename){
+  $getInfo = array();
+  $file = new SPLFileObject(drupal_get_path('module',$modulename).'/'.$modulename.'.info');
+  try{
+    foreach($file as $line) {
+      $getInfo[] = htmlspecialchars($line);
+    }
+  }catch(Exception $e){}
+  if(!empty($getInfo)){
+  	$info = array();
+  	$tmpkeyInfo = '';
+  	$debutMultiple = TRUE;
+  	foreach ($getInfo as $key => $value) {
+  		if(strpos($value, '=') !== FALSE){
+  			$keyInfo = trim(strstr($value, '=', true));
+  			$valueInfo = strstr($value, '=');
+  			if(strpos($keyInfo, '[]') !== FALSE){
+  				$info[trim($keyInfo,'[]')][] = ltrim($valueInfo,'=');
+  			}else{
+  				$info[$keyInfo] = ltrim($valueInfo,'=');
+  			}
+  		}
+  	}
+  	return $info;
+  }else{
+  	return FALSE;
+  }
+}
+
+
+/**
+ *
  * Function to get external module info
  *
  * @param string $modulename
 */
-function getExternalModuleInfo($modulename){
+function getModuleInfo($modulename){
 	$module_info = array();
 	$drupal_get_module_url = 'http://updates.drupal.org/release-history/' . $modulename . '/7.x';
   $xml = drupal_http_request($drupal_get_module_url);
@@ -32,10 +68,14 @@ function getExternalModuleInfo($modulename){
  * @param string $modulename
 */
 function getExternalModuleUrl($modulename) {
-  $module_info = getExternalModuleInfo($modulename);
+  $module_info = getModuleInfo($modulename);
   if(!empty($module_info)){
-  	$module_download_url = $array['releases']['release'][0]['download_link'];
-  	return $module_download_url;
+  	if(isset($module_info['releases']['release'][0]['download_link'])){
+  		$module_download_url = $module_info['releases']['release'][0]['download_link'];
+	  	return $module_download_url;
+  	}else{
+  		return FALSE;
+  	}
   }else{
   	return FALSE;
   }
@@ -104,11 +144,30 @@ function extractFile($file, $directory) {
   return $archiver;
 }
 
-function installExternalModule($modulename){
+function putExternalModule($modulename){
 	$file = downloadExternalmodule($modulename);
 	if($file){
-  	extractFile($file, MY_MODULE_MODULE_DIRECTORY);
+  	extractFile($file, MODULE_CONTRIB_DIRECTORY);
 	}else{
 		drupal_set_message($modulename.'is not avalaible','error');
 	}
+}
+
+function installModule($modulename){
+	/*Check if module repository exist*/
+	if(!in_array($modulename, module_list())){
+		putExternalModule($modulename);
+	}
+	$module_info = getModulenotEnableInfo($modulename);
+	if(!empty($module_info['dependencies'])){
+		foreach ($module_info['dependencies'] as $key => $value) {
+			if(!in_array($value, module_list())){
+				$aValue = explode(" ", ltrim($value,' '));
+				$depedency_name = $aValue[0];
+				putExternalModule($depedency_name);
+			}
+		}
+	}
+	module_enable(array(trim($modulename)), FALSE);
+	drupal_set_message($modulename.' has been installed successfully','status');
 }

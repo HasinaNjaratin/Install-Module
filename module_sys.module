@@ -2,7 +2,8 @@
 
 function module_sys_init(){
 	$get = system_get_info('module', 'metatag');
-	myprint($get);
+	//myprint(getModulenotEnableInfo('colorbox'));
+	//myprint(module_list());
 }
 
 function module_enable_list(){
@@ -26,7 +27,7 @@ function module_sys_menu() {
     'title' => 'Module Sys Configuration',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('module_sys_admin_form'),
-    'file' => 'module_sys.admin.inc',
+    'file' => 'includes/module_sys.admin.inc',
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_TASK,
   );
