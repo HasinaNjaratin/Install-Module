@@ -8,7 +8,7 @@ define('MODULE_CONTRIB_DIRECTORY', variable_get('module_contrib_directory','site
  * @param string $modulename
 */
 
-function getModulenotEnableInfo($modulename){
+function getInternalModuleInfo($modulename){
   $getInfo = array();
   $file = new SPLFileObject(drupal_get_path('module',$modulename).'/'.$modulename.'.info');
   try{
@@ -44,7 +44,7 @@ function getModulenotEnableInfo($modulename){
  *
  * @param string $modulename
 */
-function getModuleInfo($modulename){
+function getExternalModuleInfo($modulename){
 	$module_info = array();
 	$drupal_get_module_url = 'http://updates.drupal.org/release-history/' . $modulename . '/7.x';
   $xml = drupal_http_request($drupal_get_module_url);
@@ -63,12 +63,12 @@ function getModuleInfo($modulename){
 
 /**
  *
- * Function to download external module and extract it in module directory
+ * get url of external module to download it
  *
  * @param string $modulename
 */
 function getExternalModuleUrl($modulename) {
-  $module_info = getModuleInfo($modulename);
+  $module_info = getExternalModuleInfo($modulename);
   if(!empty($module_info)){
   	if(isset($module_info['releases']['release'][0]['download_link'])){
   		$module_download_url = $module_info['releases']['release'][0]['download_link'];
@@ -109,13 +109,9 @@ function downloadExternalmodule($modulename) {
 }
 
 /**
- * Function inspired from update_manager_archive_extract($file, $directory)
+ * 
  * extracts a file to a directory
  *
- * @param path_to_file $file
- * @param path_to_directory $directory
- * @throws Exception
- * @return A path
  */
 function extractFile($file, $directory) {
   $archiver = archiver_get_archiver($file);
@@ -124,22 +120,12 @@ function extractFile($file, $directory) {
       '%file' => $file
     )));
   }
-
-  // Remove the directory if it exists, otherwise it might contain a mixture of
-  // old files mixed with the new files (e.g. in cases where files were removed
-  // from a later release).
   $files = $archiver->listContents();
-
-  // Unfortunately, we can only use the directory name to determine the project
-  // name. Some archivers list the first file as the directory (i.e., MODULE/)
-  // and others list an actual file (i.e., MODULE/README.TXT).
   $project = strtok($files[0], '/\\');
-
   $extract_location = $directory . '/' . $project;
   if (file_exists($extract_location)) {
     file_unmanaged_delete_recursive($extract_location);
   }
-
   $archiver->extract($directory);
   return $archiver;
 }
@@ -158,7 +144,7 @@ function installModule($modulename){
 	if(!in_array($modulename, module_list())){
 		putExternalModule($modulename);
 	}
-	$module_info = getModulenotEnableInfo($modulename);
+	$module_info = getInternalModuleInfo($modulename);
 	if(!empty($module_info['dependencies'])){
 		foreach ($module_info['dependencies'] as $key => $value) {
 			if(!in_array($value, module_list())){
