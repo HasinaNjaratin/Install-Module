@@ -1,6 +1,5 @@
 name = Module system	
-description = "Define function for External Module"
-package = K&B Development
+description = "Install contrib Module"
 core = 7.x
 configure = admin/config/module_sys/settings
 
