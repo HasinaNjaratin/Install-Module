@@ -154,6 +154,8 @@ function installModule($modulename){
 			}
 		}
 	}
+	drupal_flush_all_caches();
 	module_enable(array(trim($modulename)), FALSE);
+	drupal_get_messages();
 	drupal_set_message($modulename.' has been installed successfully','status');
 }

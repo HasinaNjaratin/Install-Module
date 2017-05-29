@@ -23,31 +23,19 @@ function module_sys_admin_form($form, $form_state) {
     '#type' => 'submit',
     '#value' => t('Install'),
   );
-  $form['#validate'] = array(
-    '_module_sys_admin_form_validate',
-  );
+
   $form['#submit'] = array(
     '_module_sys_admin_form_submit',
   );
   return system_settings_form($form);
 }
 
-
-/*
- * Module sys admin form validate function
- */
-function _module_sys_admin_form_validate($form,$form_state){
-
-
-}
-
-
 /*
  * Module sys admin form submit function
  */
 function _module_sys_admin_form_submit($form,$form_state){
 	$values = $form_state['values'];
-	if($values['op'] == 'Install'){
+	if($values['op'] == 'Installer'){
 		if(empty($values['module_name'])){
 			form_set_error('module_name',t('This field is required'));
 		}else{
@@ -55,9 +43,12 @@ function _module_sys_admin_form_submit($form,$form_state){
 			if(module_exists($modulename)){
 				drupal_set_message($modulename.' is already installed','status');
 			}else{
-				installModule($modulename);
+        try {installModule($modulename);}
+        catch (Exception $e) {
+          drupal_get_messages();
+          drupal_set_message(t('An error occurred and processing did not complete.'), 'error');
+        }
 			}
 		}
 	} 
-	
 }
