@@ -1,21 +1,5 @@
 <?php
 
-function module_sys_init(){
-	$get = system_get_info('module', 'metatag');
-	//myprint(getModulenotEnableInfo('colorbox'));
-	//myprint(module_list());
-}
-
-function module_enable_list(){
-  $listeModule = array();
-  $file = new SPLFileObject(drupal_get_path('module','module_enable').'/listemodule.txt');
-  try{
-    foreach($file as $line) {
-      $listeModule[] = htmlspecialchars($line);
-    }
-  }catch(Exception $e){}
-  return $listeModule;
-}
 
 /**
  * Implement of hook_menu().
@@ -33,11 +17,4 @@ function module_sys_menu() {
   );
   
   return $items;
-}
-
-
-function myprint($var){
-	print '<pre>';
-	print_r($var);
-	die();
 }
