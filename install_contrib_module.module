@@ -4,14 +4,14 @@
 /**
  * Implement of hook_menu().
  */
-function module_sys_menu() {
+function install_contrib_module_menu() {
   $items = array();
 
-  $items['admin/config/module_sys'] = array(
+  $items['admin/config/install_contrib_module'] = array(
     'title' => 'Module Sys Configuration',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('module_sys_admin_form'),
-    'file' => 'includes/module_sys.admin.inc',
+    'page arguments' => array('install_contrib_module_admin_form'),
+    'file' => 'includes/install_contrib_module.admin.inc',
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_TASK,
   );

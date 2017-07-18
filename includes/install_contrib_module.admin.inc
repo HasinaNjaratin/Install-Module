@@ -1,9 +1,9 @@
 <?php
-include(drupal_get_path('module','module_sys').'/includes/module_sys.functions.inc');
+include(drupal_get_path('module','install_contrib_module').'/includes/install_contrib_module.functions.inc');
 /**
  * Module install admin.
  */
-function module_sys_admin_form($form, $form_state) { 
+function install_contrib_module_admin_form($form, $form_state) { 
   $form['module_contrib_directory'] = array(
     '#type' => 'textfield',
     '#title' => t('Module contrib directory'),
@@ -25,7 +25,7 @@ function module_sys_admin_form($form, $form_state) {
   );
 
   $form['#submit'] = array(
-    '_module_sys_admin_form_submit',
+    '_install_contrib_module_admin_form_submit',
   );
   return system_settings_form($form);
 }
@@ -33,7 +33,7 @@ function module_sys_admin_form($form, $form_state) {
 /*
  * Module sys admin form submit function
  */
-function _module_sys_admin_form_submit($form,$form_state){
+function _install_contrib_module_admin_form_submit($form,$form_state){
 	$values = $form_state['values'];
 	if($values['op'] == 'Installer'){
 		if(empty($values['module_name'])){

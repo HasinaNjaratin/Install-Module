@@ -1,0 +1,8 @@
+name = Module system	
+description = "Install contrib Module"
+core = 7.x
+configure = admin/config/install_contrib_module/settings
+
+files[] = includes/install_contrib_modulet.admin.inc
+files[] = includes/install_contrib_modulet.functions.inc
+dependencies[] = ctools
