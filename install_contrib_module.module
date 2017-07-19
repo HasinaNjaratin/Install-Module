@@ -8,7 +8,7 @@ function install_contrib_module_menu() {
   $items = array();
 
   $items['admin/config/install_contrib_module'] = array(
-    'title' => 'Module Sys Configuration',
+    'title' => 'Install contrib module Configuration',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('install_contrib_module_admin_form'),
     'file' => 'includes/install_contrib_module.admin.inc',

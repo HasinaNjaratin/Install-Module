@@ -1,6 +1,7 @@
-name = Module system	
-description = "Install contrib Module"
+name = Install contrib module	
+description = "Make easy to download and install contrib Module"
 core = 7.x
+package = Development
 configure = admin/config/install_contrib_module/settings
 
 files[] = includes/install_contrib_modulet.admin.inc
