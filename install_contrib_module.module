@@ -1,8 +1,12 @@
 <?php
 
+/**
+ * @file
+ * Module hooks.
+ */
 
 /**
- * Implement of hook_menu().
+ * Implements hook_menu().
  */
 function install_contrib_module_menu() {
   $items = array();
@@ -15,6 +19,6 @@ function install_contrib_module_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_TASK,
   );
-  
+
   return $items;
 }

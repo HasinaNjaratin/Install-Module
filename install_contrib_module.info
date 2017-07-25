@@ -4,6 +4,6 @@ core = 7.x
 package = Development
 configure = admin/config/install_contrib_module/settings
 
-files[] = includes/install_contrib_modulet.admin.inc
-files[] = includes/install_contrib_modulet.functions.inc
+files[] = includes/install_contrib_module.admin.inc
+files[] = includes/install_contrib_module.functions.inc
 dependencies[] = ctools
